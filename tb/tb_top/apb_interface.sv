@@ -17,18 +17,33 @@ interface apb_inf(input logic clk, rst_n);
   // apb_read transfer seq check
   property apb_read_seq_prop;
     @(posedge clk) disable iff(!rst_n)
-	psel && !pwrite && paddr!='bx |=> penable ##[1:$] pready ##1 !penable |-> !psel;
+	//psel && !pwrite && paddr!=32'bx |=> penable;
+	psel && !pwrite |=> penable ##[1:3] pready |=> !penable |-> !psel;
   endproperty
 
   // apb_write transfer seq check
   property apb_write_seq_prop;
     @(posedge clk) disable iff(!rst_n)
-	psel && pwrite && paddr!='bx |=> penable ##[1:$] pready ##1 !penable |-> !psel;
+	psel && pwrite |=> penable ##[1:3] pready |=> !penable |-> !psel;//psel && pwrite && paddr!='bx |=> penable |=>##2 pready |=> !penable |-> !psel;
+  endproperty
+  
+  //apb_read error check
+  property read_error_prop;
+    @(posedge clk) disable iff(!rst_n)
+	psel && !pwrite && (paddr>=`APB_SRAM_SIZE)|=> penable ##[1:3] pready |-> pslverr |=> !penable |-> !psel;
+  endproperty
+
+  //apb_write error check
+  property write_error_prop;
+    @(posedge clk) disable iff(!rst_n)
+	psel && pwrite && (paddr>=`APB_SRAM_SIZE)|=> penable ##[1:3] pready |-> pslverr |=> !penable |-> !psel;
   endproperty
 
   // property check assertions
-  assert property(apb_read_seq_prop);
-  assert property(apb_write_seq_prop);
+  apb_read: assert property(apb_read_seq_prop);
+  apb_write: assert property(apb_write_seq_prop);
+  read_error: assert property(read_error_prop);
+  write_error: assert property(write_error_prop);
 
 endinterface
 

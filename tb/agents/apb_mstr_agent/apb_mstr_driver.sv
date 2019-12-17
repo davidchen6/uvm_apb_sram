@@ -1,6 +1,8 @@
 `ifndef APB_MSTR_DRIVER__SV
 `define APB_MSTR_DRIVER__SV
 
+`include "./tb/defines/tb_defines.sv"
+
 class apb_mstr_driver extends uvm_driver #(apb_transaction);
 
   `uvm_component_utils(apb_mstr_driver)
@@ -49,9 +51,9 @@ class apb_mstr_driver extends uvm_driver #(apb_transaction);
 	@(posedge vif.clk);
     #10;
 	vif.penable <= 1;
-	@(posedge vif.clk);
-	#10;
 	wait(vif.pready==1);
+    @(posedge vif.clk);
+	#10;
 	vif.psel <= 0;
 	vif.penable <= 0;
 	repeat(2)@(posedge vif.clk);
@@ -60,17 +62,17 @@ class apb_mstr_driver extends uvm_driver #(apb_transaction);
   
   virtual task read_one_pkt(apb_transaction tr);
     @(posedge vif.clk);
-    #10;
+    //#10;
 	vif.paddr <= tr.paddr;
 	vif.pwrite <= tr.pwrite;
 	vif.psel <= 1;
 	vif.penable <= 0;
 	@(posedge vif.clk);
-    #10;
+   // #10;
 	vif.penable <= 1;
-	@(posedge vif.clk);
 	wait(vif.pready==1);
-	#10;
+	@(posedge vif.clk);
+//	#10;
 	vif.psel <= 0;
 	vif.penable <= 0;
 	tr.prdata = vif.prdata;

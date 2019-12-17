@@ -42,6 +42,27 @@ class drt_wr_rd_mem_sequence extends uvm_sequence #(apb_transaction);
 	  i++;
 	end
 
+	#500;
+	//write 32'h55555555 and 32'haaaaaaaa to memory 
+	i = 0;
+	while(i<(`APB_SRAM_SIZE)) begin
+      if(i%2==0)
+	    //my_data = 32'h00005555;
+		my_data = 32'haaaaaaaa;
+	  else
+	    //my_data = 32'haaaa0000;
+	    my_data = 32'h55555555;
+	  `uvm_do_with(apb_tr, {apb_tr.pwrite == 1; apb_tr.paddr == i;apb_tr.pwdata == my_data;})
+	  i++;
+	end
+
+    #500;
+	//read back all memory data.
+	i = 0;
+	while(i<(`APB_SRAM_SIZE)) begin
+	  `uvm_do_with(apb_tr, {apb_tr.pwrite==0; apb_tr.paddr == i;})
+	  i++;
+	end
     #500;
 	if(starting_phase != null)
 	  starting_phase.drop_objection(this);

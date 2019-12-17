@@ -16,6 +16,7 @@
 `define APB_SRAM_MEM_BLOCK_SIZE 32   // Memory block size in SRAM
 `define APB_SRAM_RESET_VAL 0         //SRAM_RESET_VALUE
 // defines to be overwriten by command line defines
+`define APB_SLV_WAIT_FUNC_EN 1       //enable APB SLV wait function
 `ifndef APB_SLV_WAIT_FUNC_EN
   `define APB_SLV_WAIT_FUNC_EN 0  // APB slave wait delay insertion
 `endif

@@ -47,7 +47,8 @@ class apb_mstr_monitor extends uvm_monitor;
 	apb_tr.paddr = vif.paddr;
 	apb_tr.pwrite = vif.pwrite;
 	apb_tr.pwdata = vif.pwdata;
-    repeat (1) @(posedge vif.clk);
+    wait(vif.pready==1);
+	repeat (1) @(posedge vif.clk);
 	apb_tr.prdata = vif.prdata;
 	if(apb_tr.pwrite==0)begin
       $display("Monitor abp_tr.prdata is %0h in addr: %0d", apb_tr.prdata, apb_tr.paddr);

@@ -37,7 +37,6 @@ RUN_OPTION = +UVM_TESTNAME=$(tc) +UVM_VERBOSITY=$(VERBOSITY)
 #tc_name = $(tc_name_v)
 #endif
 
-
 fsdb = test.fsdb
 
 
@@ -51,9 +50,9 @@ cov = 1
 
 
 ifeq ($(strip $(cov)),1)
-    cov_cmp_vcs = -cm line+cond+fsm+tgl+branch+assert -cm_dir ./cov
-    cov_sim_vcs = -cm line+cond+fsm+tgl+branch+assert -cm_dir ./cov -cm_name $(tc_prefix)
-    cov_files = cov.vdb DVEfiles novas*
+    cov_cmp_vcs = -cm line+cond+fsm+tgl+branch+assert -cm_dir ./cov/cmp_cov
+    cov_sim_vcs = -cm line+cond+fsm+tgl+branch+assert -cm_dir ./cov/cov$(tc_prefix) -cm_name $(tc_prefix)
+    cov_files = cov.vdb DVEfiles novas* ./cov *.vdb urg*
 else
     cov_cmp_vcs =
     cov_sim_vcs = 
@@ -81,4 +80,15 @@ ls:
 
 verdi:
 	verdi -ssv -ssy -sv $(UVM_COMPILE) $(tb) $(lib) -ssf $(fsdb)
+
+###add cmd for regression ####
+#export SHELL = /bin/bash -f
+TESTS :=drt_wr_rd_mem_test rand_wr_rd_mem_test err_wr_rd_mem_test
+
+regress:
+	@$(foreach tc,$(TESTS),\
+		./simv +UVM_VERBOSITY=$(VERBOSITY) +UVM_TESTNAME=$(tc) ${cov_sim_vcs} -l $(tc).log;\
+	)
+	urg -full64 -metric line+cond+fsm+tgl+branch+assert+group -parallel -dbname cov.vdb -dir ./cov/*.vdb
+	dve -full64 -lca -cov -covdir ./cov.vdb
 

@@ -9,8 +9,8 @@ class apb_cov extends uvm_component;
 
    covergroup apb_fcov;
        COV_pwrite: coverpoint cov_tr.pwrite{
-         bins a = {0};
-	     bins b = {1};
+         bins a_cp = {0};
+	     bins b_cp = {1};
        }
        COV_paddr: coverpoint cov_tr.paddr[5:0]{
          //bins a = {[0:127]};
@@ -18,11 +18,11 @@ class apb_cov extends uvm_component;
          //bins c = {[228:255]};
        }
        COV_pwdata: coverpoint cov_tr.pwdata{
-         bins a = {[0:32'h55555554]};
-         bins b = {32'h55555555};
-         bins c = {[32'h55555556:32'haaaaaaa9]};
-		 bins d = {32'haaaaaaaa};
-		 bins other = {[32'haaaaaaab:$]};
+         bins a_cp = {[0:32'h55555554]};
+         bins b_cp = {32'h55555555};
+         bins c_cp = {[32'h55555556:32'haaaaaaa9]};
+		 bins d_cp = {32'haaaaaaaa};
+		 bins other_cp = {[32'haaaaaaab:32'hffffffff]};
        }
        WRxRD: cross COV_pwrite, COV_paddr;
        WRxDATA: cross COV_paddr, COV_pwdata;

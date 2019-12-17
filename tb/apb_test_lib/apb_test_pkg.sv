@@ -13,6 +13,8 @@ package apb_test_pkg;
   //include test
   `include "./tb/apb_test_lib/apb_base_test.sv"
   `include "./tb/apb_test_lib/drt_wr_rd_mem_test.sv"
+  `include "./tb/apb_test_lib/rand_wr_rd_mem_test.sv"
+  `include "./tb/apb_test_lib/err_wr_rd_mem_test.sv"
   
 endpackage: apb_test_pkg
 `endif
