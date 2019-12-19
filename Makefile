@@ -82,7 +82,6 @@ verdi:
 	verdi -ssv -ssy -sv $(UVM_COMPILE) $(tb) $(lib) -ssf $(fsdb)
 
 ###add cmd for regression ####
-#export SHELL = /bin/bash -f
 TESTS :=drt_wr_rd_mem_test rand_wr_rd_mem_test err_wr_rd_mem_test
 
 regress:

@@ -44,10 +44,10 @@ class apb_mstr_monitor extends uvm_monitor;
 	while(vif.psel==0) #10;
 	while(vif.penable==0)#10;
 	@(posedge vif.clk);
+    wait(vif.pready==1);
 	apb_tr.paddr = vif.paddr;
 	apb_tr.pwrite = vif.pwrite;
 	apb_tr.pwdata = vif.pwdata;
-    wait(vif.pready==1);
 	repeat (1) @(posedge vif.clk);
 	apb_tr.prdata = vif.prdata;
 	if(apb_tr.pwrite==0)begin

@@ -24,7 +24,7 @@ class apb_model extends uvm_component;
 	ap = new("ap", this);
 	foreach (memory[i]) begin
 	  memory[i] = `APB_SRAM_RESET_VAL;
-	  $display("memory[%0d] is %0d.", i, memory[i]);
+//	  $display("memory[%0d] is %0d.", i, memory[i]);
 	end
   endfunction
 

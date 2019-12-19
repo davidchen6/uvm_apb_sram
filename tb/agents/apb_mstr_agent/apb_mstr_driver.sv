@@ -56,7 +56,7 @@ class apb_mstr_driver extends uvm_driver #(apb_transaction);
 	#10;
 	vif.psel <= 0;
 	vif.penable <= 0;
-	repeat(2)@(posedge vif.clk);
+	repeat(1)@(posedge vif.clk);
 
   endtask: write_one_pkt
   
@@ -75,9 +75,9 @@ class apb_mstr_driver extends uvm_driver #(apb_transaction);
 //	#10;
 	vif.psel <= 0;
 	vif.penable <= 0;
-	tr.prdata = vif.prdata;
-	`uvm_info("apb_mstr_driver", $sformatf("tr.prdata is %0h in addr: %0d", tr.prdata, tr.paddr), UVM_LOW);
-	repeat(2)@(posedge vif.clk);
+//	tr.prdata = vif.prdata;
+//	`uvm_info("apb_mstr_driver", $sformatf("tr.prdata is %0h in addr: %0d", tr.prdata, tr.paddr), UVM_LOW);
+	repeat(1)@(posedge vif.clk);
   endtask: read_one_pkt
   
 endclass: apb_mstr_driver
