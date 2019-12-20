@@ -1,7 +1,7 @@
 `ifndef APB_BASE_SEQUENCE__SV
 `define APB_BASE_SEQUENCE__SV
 
-`include "./tb/defines/tb_defines.sv"
+`include "tb_defines.sv"
 
 class apb_base_sequence extends uvm_sequence #(apb_transaction);
 

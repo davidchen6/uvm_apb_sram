@@ -2,13 +2,13 @@
 // include and import uvm_pkg
 //`include "uvm_macros.svh"
 import uvm_pkg::*;
-`include "./tb/defines/tb_defines.sv"
-`include "./tb/tb_top/apb_interface.sv"
+`include "tb_defines.sv"
+`include "apb_interface.sv"
 //`include "./tb/agents/apb_mstr_agent/apb_transaction.sv"
 //`include "./tb/agents/apb_mstr_agent/apb_mstr_driver.sv"
-`include "./tb/agents/apb_mstr_agent/apb_agent_pkg.sv"
-`include "./tb/env/apb_mstr_env/apb_env_pkg.sv"
-`include "./tb/apb_test_lib/apb_test_pkg.sv"
+`include "apb_agent_pkg.sv"
+`include "apb_env_pkg.sv"
+`include "apb_test_pkg.sv"
 
 import apb_test_pkg::*;
 

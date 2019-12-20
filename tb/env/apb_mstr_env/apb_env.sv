@@ -9,8 +9,8 @@ class apb_env extends uvm_component;
 
   uvm_tlm_analysis_fifo #(apb_transaction) agt_scb_fifo;
   uvm_tlm_analysis_fifo #(apb_transaction) agt_mdl_fifo;
-  uvm_tlm_analysis_fifo #(apb_transaction) mdl_scb_fifo;
-  uvm_tlm_analysis_fifo #(apb_transaction) scb_mdl_fifo;
+  //uvm_tlm_analysis_fifo #(apb_transaction) mdl_scb_fifo;
+//  uvm_tlm_analysis_fifo #(apb_transaction) scb_mdl_fifo;
 
   function new(string name = "apb_env", uvm_component parent);
     super.new(name, parent);
@@ -28,8 +28,8 @@ class apb_env extends uvm_component;
 
 	agt_scb_fifo = new("agt_scb_fifo", this);
 	agt_mdl_fifo = new("agt_mdl_fifo", this);
-	mdl_scb_fifo = new("mdl_scb_fifo", this);
-	scb_mdl_fifo = new("scb_mdl_fifo", this);
+	//mdl_scb_fifo = new("mdl_scb_fifo", this);
+//	scb_mdl_fifo = new("scb_mdl_fifo", this);
   endfunction
 
   extern virtual function void connect_phase(uvm_phase phase);
@@ -40,10 +40,10 @@ function void apb_env::connect_phase(uvm_phase phase);
   super.connect_phase(phase); 
   i_agt.ap.connect(agt_mdl_fifo.analysis_export);
   mdl.port.connect(agt_mdl_fifo.blocking_get_export);
-  mdl.ap.connect(mdl_scb_fifo.analysis_export);
-  scb.exp_port.connect(mdl_scb_fifo.blocking_get_export);
-  scb.rd_port.connect(scb_mdl_fifo.analysis_export);
-  mdl.mdl_port.connect(scb_mdl_fifo.blocking_get_export);
+  //mdl.ap.connect(mdl_scb_fifo.analysis_export);
+  //scb.exp_port.connect(mdl_scb_fifo.blocking_get_export);
+  scb.rd_transport.connect(mdl.mdl_imp);
+  //mdl.mdl_port.connect(scb_mdl_fifo.blocking_get_export);
   o_agt.ap.connect(agt_scb_fifo.analysis_export);
   scb.act_port.connect(agt_scb_fifo.blocking_get_export);
 endfunction

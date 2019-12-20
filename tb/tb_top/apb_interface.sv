@@ -1,7 +1,7 @@
 `ifndef APB_INTERFACE__SV
 `define APB_INTERFACE__SV
 
-`include "./tb/defines/tb_defines.sv"
+`include "tb_defines.sv"
 interface apb_inf(input logic clk, rst_n);
 
   logic psel;

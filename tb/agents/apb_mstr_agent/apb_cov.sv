@@ -13,9 +13,7 @@ class apb_cov extends uvm_component;
 	     bins b_cp = {1};
        }
        COV_paddr: coverpoint cov_tr.paddr[5:0]{
-         //bins a = {[0:127]};
-         //bins b = {[130:227]};
-         //bins c = {[228:255]};
+         //bins a = {[0:63]};
        }
        COV_pwdata: coverpoint cov_tr.pwdata{
          bins a_cp = {[0:32'h55555554]};

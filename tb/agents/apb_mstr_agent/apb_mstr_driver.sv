@@ -1,7 +1,7 @@
 `ifndef APB_MSTR_DRIVER__SV
 `define APB_MSTR_DRIVER__SV
 
-`include "./tb/defines/tb_defines.sv"
+`include "tb_defines.sv"
 
 class apb_mstr_driver extends uvm_driver #(apb_transaction);
 
