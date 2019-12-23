@@ -38,7 +38,7 @@ RUN_OPTION = +UVM_TESTNAME=$(tc) +UVM_VERBOSITY=$(VERBOSITY)
 #endif
 
 fsdb = test.fsdb
-
+runtime = $(shell date +"%Y%m%d%H%M%S")
 
 seed = $$$$ 
 
@@ -47,12 +47,18 @@ all: clean comp running check
 
 
 cov = 1
-
+reg = 0
 
 ifeq ($(strip $(cov)),1)
-    cov_cmp_vcs = -cm line+cond+fsm+tgl+branch+assert -cm_dir ./cov/cmp_cov
-    cov_sim_vcs = -cm line+cond+fsm+tgl+branch+assert -cm_dir ./cov/cov$(tc_prefix) -cm_name $(tc_prefix)
-    cov_files = cov.vdb DVEfiles novas* ./cov *.vdb urg*
+    ifeq ($(strip $(reg)),1)
+        cov_cmp_vcs = -cm line+cond+fsm+tgl+branch+assert -cm_dir ./cov/cmp_cov
+        cov_sim_vcs = -cm line+cond+fsm+tgl+branch+assert -cm_dir ./cov/cov$(tc_prefix)_$(runtime) -cm_name $(tc_prefix)
+        cov_files = cov.vdb DVEfiles novas* ./cov *.vdb urg*
+    else
+        cov_cmp_vcs = -cm line+cond+fsm+tgl+branch+assert -cm_dir ./cov
+        cov_sim_vcs = -cm line+cond+fsm+tgl+branch+assert -cm_dir ./cov -cm_name $(tc_prefix)
+        cov_files = cov.vdb DVEfiles novas*
+    endif
 else
     cov_cmp_vcs =
     cov_sim_vcs = 
@@ -82,11 +88,12 @@ verdi:
 	verdi -ssv -ssy -sv $(UVM_COMPILE) $(tb) $(lib) -ssf $(fsdb)
 
 ###add cmd for regression ####
-TESTS :=drt_wr_rd_mem_test rand_wr_rd_mem_test err_wr_rd_mem_test
-
+#TESTS :=drt_wr_rd_mem_test rand_wr_rd_mem_test err_wr_rd_mem_test
+testcase =caselist.txt
+TESTS = $(shell cat $(testcase))
 regress:
 	@$(foreach tc,$(TESTS),\
-		./simv +UVM_VERBOSITY=$(VERBOSITY) +UVM_TESTNAME=$(tc) ${cov_sim_vcs} -l $(tc).log;\
+		./simv +ntb_random_seed=$(shell echo "$(seed)") $(RUN_OPTION) ${cov_sim_vcs} -l $(tc).log;\
 	)
 	urg -full64 -metric line+cond+fsm+tgl+branch+assert+group -parallel -dbname cov.vdb -dir ./cov/*.vdb
 	dve -full64 -lca -cov -covdir ./cov.vdb
