@@ -39,11 +39,11 @@ class apb_mstr_monitor extends uvm_monitor;
   endtask: main_phase
 
   virtual task collect_one_pkt(apb_transaction apb_tr);
-    @(posedge vif.clk);
+    //@(posedge vif.clk);
     //#10;
-	while(vif.psel==0) #10;
-	while(vif.penable==0)#10;
-	@(posedge vif.clk);
+	while(vif.psel==0) @(posedge vif.clk);//#10;
+	while(vif.penable==0)@(posedge vif.clk);//#10;
+	//@(posedge vif.clk);
     wait(vif.pready==1);
 	apb_tr.paddr = vif.paddr;
 	apb_tr.pwrite = vif.pwrite;
