@@ -66,6 +66,10 @@ module tb_top;
     $fsdbDumpon;
 	$fsdbDumpSVA;//
   end
+//produce VCS DVE waveform
+  initial begin
+    $vcdpluson;
+  end
 
 endmodule
 

@@ -24,35 +24,49 @@ class apb_mstr_monitor extends uvm_monitor;
   endfunction
 
   virtual task main_phase(uvm_phase phase);
-    apb_transaction apb_tr;
 
 	while(!vif.rst_n)@(posedge vif.clk);
 	`uvm_info("apb_mstr_monitor", "start to collect packet...", UVM_LOW);
 	@(posedge vif.clk);
 	while(1) begin
-   	  apb_tr = new();
-  	  $display({"main phase for: ", get_full_name()});
-	  collect_one_pkt(apb_tr);
-      ap.write(apb_tr);
-	  cov_ap.write(apb_tr);
+  	  //$display({"main phase for: ", get_full_name()});
+	  collect_one_pkt();
     end
   endtask: main_phase
 
-  virtual task collect_one_pkt(apb_transaction apb_tr);
-    //@(posedge vif.clk);
+  virtual task collect_one_pkt();
+    apb_transaction apb_tr;
     //#10;
 	while(vif.psel==0) @(posedge vif.clk);//#10;
 	while(vif.penable==0)@(posedge vif.clk);//#10;
 	//@(posedge vif.clk);
     wait(vif.pready==1);
-	apb_tr.paddr = vif.paddr;
-	apb_tr.pwrite = vif.pwrite;
-	apb_tr.pwdata = vif.pwdata;
-	repeat (1) @(posedge vif.clk);
-	apb_tr.prdata = vif.prdata;
-	if(apb_tr.pwrite==0)begin
-      $display("Monitor abp_tr.prdata is %0h in addr: %0d", apb_tr.prdata, apb_tr.paddr);
+	@(posedge vif.clk);//pslverr is one clock after pready asserted when APB_SLV_WAIT_FUNC_EN=0.
+    #10;//wait pslverr.
+	if(vif.pslverr==1)begin
+	  if(vif.pwrite==1)begin
+	    `uvm_error("DUT_OP_ERROR", "DUT has report an error during write operation using PSLVERR signal")
+	//	@(posedge vif.clk);
+	  end
+	  else if(vif.pwrite==0) begin
+	    `uvm_error("DUT_OP_ERROR", "DUT has report an error during read operation using PSLVERR signal")
+	//	@(posedge vif.clk);
+	  end
 	end
+	else begin
+   	  apb_tr = new();
+	  apb_tr.paddr = vif.paddr;
+	  apb_tr.pwrite = vif.pwrite;
+	  apb_tr.pwdata = vif.pwdata;
+	  //repeat (1) @(posedge vif.clk);//it could be removed when one clk added before pslverr asserted.
+	  apb_tr.prdata = vif.prdata;
+	  if(apb_tr.pwrite==0)begin
+        $display("Monitor abp_tr.prdata is %0h in addr: %0d", apb_tr.prdata, apb_tr.paddr);
+	  end
+      ap.write(apb_tr);
+	  cov_ap.write(apb_tr);
+	end
+    wait(vif.pready==0)@(posedge vif.clk);//need this one clk circle, if not, the scb will receive 2 times of apb_tr.
   endtask: collect_one_pkt
 endclass
 `endif
