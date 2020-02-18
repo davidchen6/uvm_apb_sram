@@ -42,7 +42,7 @@ class apb_mstr_monitor extends uvm_monitor;
 	//@(posedge vif.clk);
     wait(vif.pready==1);
 	@(posedge vif.clk);//pslverr is one clock after pready asserted when APB_SLV_WAIT_FUNC_EN=0.
-    #10;//wait pslverr.
+    #2;//wait pslverr.
 	if(vif.pslverr==1)begin
 	  if(vif.pwrite==1)begin
 	    `uvm_error("DUT_OP_ERROR", "DUT has report an error during write operation using PSLVERR signal")

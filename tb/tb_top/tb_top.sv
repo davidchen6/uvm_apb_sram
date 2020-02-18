@@ -46,11 +46,12 @@ module tb_top;
   end
 
 
-  always #100 clk = ~clk;
+  always #5 clk = ~clk;
   //always #((0.5/(`APB_CLK_FREQ_MHZ*1000000)) * 1s) clk_100MHz = ~clk_100MHz;
   initial begin
     rst_n = 0;
-    #1000 rst_n = 1;
+    repeat(100) @(posedge clk); 
+	rst_n = 1;
   end
 
 
